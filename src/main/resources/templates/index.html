@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pitman Shorthand Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f4f6f9;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        h1 {
+            color: #243b64;
+            text-align: center;
+        }
+
+        input, button {
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 10px 18px;
+            background: #2457a7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        #preview {
+            display: none;
+            max-width: 100%;
+            max-height: 400px;
+            margin-top: 20px;
+        }
+
+        #message {
+            color: #b42318;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pitman Shorthand Converter</h1>
+
+        <p>Upload an image of handwritten Pitman shorthand.</p>
+
+        <input
+            type="file"
+            id="imageInput"
+            accept="image/png, image/jpeg"
+        >
+
+        <br>
+
+        <button id="previewButton" type="button">
+            Preview Image
+        </button>
+
+        <p id="message" role="status"></p>
+
+        <img id="preview" alt="Uploaded shorthand preview">
+    </div>
+
+    <script>
+        const imageInput = document.getElementById("imageInput");
+        const previewButton = document.getElementById("previewButton");
+        const preview = document.getElementById("preview");
+        const message = document.getElementById("message");
+
+        previewButton.addEventListener("click", function () {
+            const file = imageInput.files[0];
+
+            if (!file) {
+                message.textContent = "Please select an image first.";
+                preview.style.display = "none";
+                return;
+            }
+
+            if (!["image/png", "image/jpeg"].includes(file.type)) {
+                message.textContent = "Please select a PNG or JPG image.";
+                preview.style.display = "none";
+                return;
+            }
+
+            const imageURL = URL.createObjectURL(file);
+
+            preview.onload = function () {
+                URL.revokeObjectURL(imageURL);
+            };
+
+            preview.onerror = function () {
+                URL.revokeObjectURL(imageURL);
+                preview.style.display = "none";
+                message.textContent = "Unable to display this image.";
+            };
+
+            preview.src = imageURL;
+            preview.style.display = "block";
+            message.textContent = "Image selected successfully.";
+        });
+    </script>
+</body>
+</html>
